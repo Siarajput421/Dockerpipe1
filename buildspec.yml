@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_NAME:latest -f ./service-1/dockerfile . 
+      - docker build -t $REPOSITORY_NAME:latest -f ./Dockerpipe1/blob/main/Service1/dockerfile . 
       - docker tag ecr:latest public.ecr.aws/i8g4q7b2/ecr:latest
       - docker tag ecr:latest public.ecr.aws/i8g4q7b2/ecr:latest:docker push public.ecr.aws/i8g4q7b2/ecr:latest
   post_build:
