@@ -15,11 +15,11 @@ phases:
       - REPOSITORY_NAME="ecr-6"      
       
       - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr-1
-      - REPOSITORY_URI=public.ecr-2.aws/i8g4q7b2/ecr-2
-      - REPOSITORY_URI=public.ecr-3.aws/i8g4q7b2/ecr-3
-      - REPOSITORY_URI=public.ecr-4.aws/i8g4q7b2/ecr-4
-      - REPOSITORY_URI=public.ecr-5.aws/i8g4q7b2/ecr-5
-      - REPOSITORY_URI=public.ecr-6.aws/i8g4q7b2/ecr-6
+      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr-2
+      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr-3
+      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr-4
+      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr-5
+      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr-6
 
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
