@@ -26,16 +26,16 @@ phases:
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t ecr-1  -f ./service1/dockerfile .
-      - docker build -t ecr-2:latest-2 -f ./service2/dockerfile . 
-      - docker build -t ecr-3:latest-3 -f ./service3/dockerfile .
-      - docker build -t ecr-4:latest-4 -f ./service4/dockerfile .
-      - docker build -t ecr-5:latest-5 -f ./service5/dockerfile .
-      - docker build -t ecr-6:latest-6 -f ./service6/dockerfile .
+      - docker build -t ecr-1:latest . -f ./service1/dockerfile .
+      - docker build -t ecr-2:latest . -f ./service2/dockerfile . 
+      - docker build -t ecr-3:latest . -f ./service3/dockerfile .
+      - docker build -t ecr-4:latest . -f ./service4/dockerfile .
+      - docker build -t ecr-5:latest . -f ./service5/dockerfile .
+      - docker build -t ecr-6:latest . -f ./service6/dockerfile .
       
 
-      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:latest-1
-      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG-1
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:latest
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
 
       - docker tag $REPOSITORY_NAME-3:latest $REPOSITORY_URI:latest-2
       - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG-2
