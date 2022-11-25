@@ -1,9 +1,6 @@
 version: 0.2
 
 phases:
-  pre_build:version: 0.2
-
-phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -17,7 +14,7 @@ phases:
       - REPOSITORY_NAME="ecr-5"
       - REPOSITORY_NAME="ecr-6"      
       
-      - REPOSITORY_URI=public.ecr-1.aws/i8g4q7b2/ecr-1
+      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr-1
       - REPOSITORY_URI=public.ecr-2.aws/i8g4q7b2/ecr-2
       - REPOSITORY_URI=public.ecr-3.aws/i8g4q7b2/ecr-3
       - REPOSITORY_URI=public.ecr-4.aws/i8g4q7b2/ecr-4
@@ -29,7 +26,7 @@ phases:
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t ecr-1:latest-1 -f ./service1/dockerfile .
+      - docker build -t ecr-1  -f ./service1/dockerfile .
       - docker build -t ecr-2:latest-2 -f ./service2/dockerfile . 
       - docker build -t ecr-3:latest-3 -f ./service3/dockerfile .
       - docker build -t ecr-4:latest-4 -f ./service4/dockerfile .
@@ -58,8 +55,8 @@ phases:
 
   post_build:
     commands:
-      - docker push public.ecr-1.aws/i8g4q7b2/ecr-1:latest-1
-      - docker push public.ecr-1.aws/i8g4q7b2/ecr-1:latest:docker tag ecr:latest-1
+      - docker push public.ecr.aws/i8g4q7b2/ecr-1:latest
+      - docker push public.ecr.aws/i8g4q7b2/ecr-1:docker tag ecr-1:latest public.ecr.aws/i8g4q7b2/ecr-1:latest
 
       - docker push public.ecr-2.aws/i8g4q7b2/ecr-2:latest-2
       - docker push public.ecr-2.aws/i8g4q7b2/ecr-2:latest:docker tag ecr:latest-2
@@ -79,12 +76,12 @@ phases:
 
 
 
-      - printf '[{"name":"golang-container-1","public.ecr-1.aws/i8g4q7b2/ecr-1":"%s"}]' public.ecr-1.aws/i8g4q7b2/ecr-1:latest:$IMAGE_TAG > imagedefinitions.json-1
-      - printf '[{"name":"golang-container-2","public.ecr-2.aws/i8g4q7b2/ecr-2":"%s"}]' public.ecr-2.aws/i8g4q7b2/ecr-2:latest:$IMAGE_TAG > imagedefinitions.json-2
-      - printf '[{"name":"golang-container-3","public.ecr-3.aws/i8g4q7b2/ecr-3":"%s"}]' public.ecr-3.aws/i8g4q7b2/ecr-3:latest:$IMAGE_TAG > imagedefinitions.json-3
-      - printf '[{"name":"golang-container-4","public.ecr-4.aws/i8g4q7b2/ecr-4":"%s"}]' public.ecr-4.aws/i8g4q7b2/ecr-4:latest:$IMAGE_TAG > imagedefinitions.json-4
-      - printf '[{"name":"golang-container-5","public.ecr-5.aws/i8g4q7b2/ecr-5":"%s"}]' public.ecr-5.aws/i8g4q7b2/ecr-5:latest:$IMAGE_TAG > imagedefinitions.json-5
-      - printf '[{"name":"golang-container-6","public.ecr-6.aws/i8g4q7b2/ecr-6":"%s"}]' public.ecr-6.aws/i8g4q7b2/ecr-6:latest:$IMAGE_TAG > imagedefinitions.json-6            
+      - printf '[{"name":"golang-container-1","public.ecr.aws/i8g4q7b2/ecr-1":"%s"}]' public.ecr.aws/i8g4q7b2/ecr-1:$IMAGE_TAG > imagedefinitions.json-1
+      - printf '[{"name":"golang-container-1","public.ecr.aws/i8g4q7b2/ecr-2":"%s"}]' public.ecr.aws/i8g4q7b2/ecr-2:$IMAGE_TAG > imagedefinitions.json-2
+      - printf '[{"name":"golang-container-1","public.ecr.aws/i8g4q7b2/ecr-3":"%s"}]' public.ecr.aws/i8g4q7b2/ecr-3:$IMAGE_TAG > imagedefinitions.json-3
+      - printf '[{"name":"golang-container-1","public.ecr.aws/i8g4q7b2/ecr-4":"%s"}]' public.ecr.aws/i8g4q7b2/ecr-4:$IMAGE_TAG > imagedefinitions.json-4
+      - printf '[{"name":"golang-container-1","public.ecr.aws/i8g4q7b2/ecr-5":"%s"}]' public.ecr.aws/i8g4q7b2/ecr-5:$IMAGE_TAG > imagedefinitions.json-5
+      - printf '[{"name":"golang-container-1","public.ecr.aws/i8g4q7b2/ecr-6":"%s"}]' public.ecr.aws/i8g4q7b2/ecr-6:$IMAGE_TAG > imagedefinitions.json-6            
 
 
 artifacts:
@@ -94,26 +91,3 @@ artifacts:
   files: imagedefinitions.json-4
   files: imagedefinitions.json-5
   files: imagedefinitions.json-6
-
-    commands:
-      - echo Logging in to Amazon ECR...
-      - echo $AWS_DEFAULT_REGION
-      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i8g4q7b2
-      - REPOSITORY_NAME="ecr"      
-      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
-  build:
-    commands:
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_NAME:latest .
-      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:latest
-      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
-  post_build:
-    commands:
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '[{"name":"golang-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-
-artifacts:
-  files: imagedefinitions.json
