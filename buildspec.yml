@@ -1,7 +1,100 @@
 version: 0.2
 
 phases:
+  pre_build:version: 0.2
+
+phases:
   pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - echo $AWS_DEFAULT_REGION
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i8g4q7b2
+      
+      - REPOSITORY_NAME="ecr-1"
+      - REPOSITORY_NAME="ecr-2"
+      - REPOSITORY_NAME="ecr-3"
+      - REPOSITORY_NAME="ecr-4"
+      - REPOSITORY_NAME="ecr-5"
+      - REPOSITORY_NAME="ecr-6"      
+      
+      - REPOSITORY_URI=public.ecr-1.aws/i8g4q7b2/ecr-1
+      - REPOSITORY_URI=public.ecr-2.aws/i8g4q7b2/ecr-2
+      - REPOSITORY_URI=public.ecr-3.aws/i8g4q7b2/ecr-3
+      - REPOSITORY_URI=public.ecr-4.aws/i8g4q7b2/ecr-4
+      - REPOSITORY_URI=public.ecr-5.aws/i8g4q7b2/ecr-5
+      - REPOSITORY_URI=public.ecr-6.aws/i8g4q7b2/ecr-6
+
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t ecr-1:latest-1 -f ./service1/dockerfile .
+      - docker build -t ecr-2:latest-2 -f ./service2/dockerfile . 
+      - docker build -t ecr-3:latest-3 -f ./service3/dockerfile .
+      - docker build -t ecr-4:latest-4 -f ./service4/dockerfile .
+      - docker build -t ecr-5:latest-5 -f ./service5/dockerfile .
+      - docker build -t ecr-6:latest-6 -f ./service6/dockerfile .
+      
+
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:latest-1
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG-1
+
+      - docker tag $REPOSITORY_NAME-3:latest $REPOSITORY_URI:latest-2
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG-2
+
+      - docker tag $REPOSITORY_NAME-3:latest $REPOSITORY_URI:latest-3
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG-3
+
+      - docker tag $REPOSITORY_NAME-3:latest $REPOSITORY_URI:latest-4
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG-4
+
+      - docker tag $REPOSITORY_NAME-3:latest $REPOSITORY_URI:latest-5
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG-5
+
+      - docker tag $REPOSITORY_NAME-3:latest $REPOSITORY_URI:latest-6
+      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG-6                  
+
+
+  post_build:
+    commands:
+      - docker push public.ecr-1.aws/i8g4q7b2/ecr-1:latest-1
+      - docker push public.ecr-1.aws/i8g4q7b2/ecr-1:latest:docker tag ecr:latest-1
+
+      - docker push public.ecr-2.aws/i8g4q7b2/ecr-2:latest-2
+      - docker push public.ecr-2.aws/i8g4q7b2/ecr-2:latest:docker tag ecr:latest-2
+
+      - docker push public.ecr-3.aws/i8g4q7b2/ecr-3:latest-3
+      - docker push public.ecr-3.aws/i8g4q7b2/ecr-3:latest:docker tag ecr:latest-3
+
+      - docker push public.ecr-4.aws/i8g4q7b2/ecr-4:latest-4
+      - docker push public.ecr-4.aws/i8g4q7b2/ecr-4:latest:docker tag ecr:latest-4
+
+      - docker push public.ecr-5.aws/i8g4q7b2/ecr-5:latest-5
+      - docker push public.ecr-5.aws/i8g4q7b2/ecr-5:latest:docker tag ecr:latest-5
+
+      - docker push public.ecr-6.aws/i8g4q7b2/ecr-6:latest-6
+      - docker push public.ecr-6.aws/i8g4q7b2/ecr-6:latest:docker tag ecr:latest-6                  
+
+
+
+
+      - printf '[{"name":"golang-container-1","public.ecr-1.aws/i8g4q7b2/ecr-1":"%s"}]' public.ecr-1.aws/i8g4q7b2/ecr-1:latest:$IMAGE_TAG > imagedefinitions.json-1
+      - printf '[{"name":"golang-container-2","public.ecr-2.aws/i8g4q7b2/ecr-2":"%s"}]' public.ecr-2.aws/i8g4q7b2/ecr-2:latest:$IMAGE_TAG > imagedefinitions.json-2
+      - printf '[{"name":"golang-container-3","public.ecr-3.aws/i8g4q7b2/ecr-3":"%s"}]' public.ecr-3.aws/i8g4q7b2/ecr-3:latest:$IMAGE_TAG > imagedefinitions.json-3
+      - printf '[{"name":"golang-container-4","public.ecr-4.aws/i8g4q7b2/ecr-4":"%s"}]' public.ecr-4.aws/i8g4q7b2/ecr-4:latest:$IMAGE_TAG > imagedefinitions.json-4
+      - printf '[{"name":"golang-container-5","public.ecr-5.aws/i8g4q7b2/ecr-5":"%s"}]' public.ecr-5.aws/i8g4q7b2/ecr-5:latest:$IMAGE_TAG > imagedefinitions.json-5
+      - printf '[{"name":"golang-container-6","public.ecr-6.aws/i8g4q7b2/ecr-6":"%s"}]' public.ecr-6.aws/i8g4q7b2/ecr-6:latest:$IMAGE_TAG > imagedefinitions.json-6            
+
+
+artifacts:
+  files: imagedefinitions.json-1
+  files: imagedefinitions.json-2
+  files: imagedefinitions.json-3
+  files: imagedefinitions.json-4
+  files: imagedefinitions.json-5
+  files: imagedefinitions.json-6
+
     commands:
       - echo Logging in to Amazon ECR...
       - echo $AWS_DEFAULT_REGION
