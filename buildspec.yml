@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t ecr -f ./Dockerpipe1/service1/dockerfile . 
+      - docker build -t $REPOSITORY_NAME:service1 --build-arg file_path=./service1/index.html . 
       - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:latest
       - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
