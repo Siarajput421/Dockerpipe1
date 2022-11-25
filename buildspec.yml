@@ -26,7 +26,7 @@ phases:
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t ecr-1:latest . -f ./service1/dockerfile .
+      - docker build -t ecr-1:latest  -f ./service1/dockerfile .
       - docker build -t ecr-2:latest . -f ./service2/dockerfile . 
       - docker build -t ecr-3:latest . -f ./service3/dockerfile .
       - docker build -t ecr-4:latest . -f ./service4/dockerfile .
