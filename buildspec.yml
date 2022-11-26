@@ -7,20 +7,33 @@ phases:
       - echo $AWS_DEFAULT_REGION
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i8g4q7b2
       - REPOSITORY_NAME="ecr"      
-      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2/ecr
+      - REPOSITORY_URI=public.ecr.aws/i8g4q7b2
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
+
+    
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t ecr . 
-      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:latest
-      - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker build -t $REPOSITORY_NAME-1:latest-1 -f ./Dockerpipe1/service1/index.html .
+      - docker build -t $REPOSITORY_NAME-2:latest-2 -f ./Dockerpipe1/service2/index.html . 
+    
+  
+      - docker tag $REPOSITORY_NAME-1:latest $REPOSITORY_URI:latest-1
+      - docker tag $REPOSITORY_NAME-1:latest $REPOSITORY_URI:$IMAGE_TAG-1
+      - docker tag $REPOSITORY_NAME-2:latest $REPOSITORY_URI:latest-2
+      - docker tag $REPOSITORY_NAME-2:latest $REPOSITORY_URI:$IMAGE_TAG-2
+
+
   post_build:
     commands:
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI-1:latest-1
+      - docker push $REPOSITORY_URI-1:$IMAGE_TAG-1
+       - docker push $REPOSITORY_URI-2:latest-2
+       - docker push $REPOSITORY_URI-2:$IMAGE_TAG-2
       - printf '[{"name":"golang-container-1","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions-1.json
+      - printf '[{"name":"golang-container-2","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions-2.json
 
 artifacts:
   files: imagedefinitions-1.json
+  files: imagedefinitions-2.json
