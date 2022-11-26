@@ -20,7 +20,7 @@ phases:
     commands:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '[{"name":"golang-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions-1.json
+      - printf '[{"name":"golang-container-1","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions-1.json
 
 artifacts:
   files: imagedefinitions-1.json
