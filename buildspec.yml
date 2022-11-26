@@ -13,14 +13,14 @@ phases:
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_NAME:service1 --build-arg file_path=./Dockerpipe1/blob/main/Service1/index.html . 
+      - docker build -t $REPOSITORY_NAME:latest . 
       - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:latest
       - docker tag $REPOSITORY_NAME:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '[{"name":"golang-container-1","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions-1.json
+      - printf '[{"name":"golang-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions-1.json
 
 artifacts:
   files: imagedefinitions-1.json
