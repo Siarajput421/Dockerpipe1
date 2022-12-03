@@ -49,9 +49,9 @@ phases:
       - printf '[{"name":"service6","imageUri":"%s"}]' $uri6:latest > service6.json
 artifacts:
     files:
-        - service1.json.json 
-        - service2.json.json 
-        - service3.json.json
-        - service4.json.json
-        - service5.json.json
-        - service6.json.json
+        - service1.json 
+        - service2.json
+        - service3.json
+        - service4.json
+        - service5.json
+        - service6.json
